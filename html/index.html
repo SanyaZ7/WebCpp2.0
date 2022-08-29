@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"></meta>
+	<title>Создание объектов</title>
+	<style type="text/css">
+            .inp {
+                width: auto;
+                resize: vertical;
+                display: block;
+                font-family: monospace;
+            }
+            *{box-sizing: border-box;}
+            table{border-collapse:collapse;}
+            td,th{padding:5px 15px;text-align:left;}
+            table,th,td{border:1px solid #000;}
+           </style>
+</head>
+<body>
+Создание нового объекта. Введите название типа/класса/структоры.
+<form action="handler.php"></form>
+<input class="inp" id="struct_name1" type="text" placeholder="Тип объекта"> </input>
+<div id="add_attr" style="border-style: dashed;">
+<div class="placed" style="display:block;">
+<input style="display:inline-block" class="inp"  type="text" placeholder="Свойство" onfocus="get_focus()" oninput="width_change()" onchange="get_focus()"></input>
+<select class="property_type" placeholder="Тип свойства" style="display:inline-block">
+    <option value="char*" selected="selected">char*</option>
+    <option value="int">int</option>
+    <option value="float">float</option>
+    <option value="double">double</option>
+    <option value="bool">bool</option>
+</select>
+<button class="plus" onclick="add_attribute()">+</button>
+<button class="minus" style="display:none" onclick="delete_attribute()">-</button>
+<br>
+</div>
+</div>
+<div>
+    <button style="border-style: dashed;" onclick="to_server()">Отправить на сервер</button><br>
+    Структура должна иметь минимум одно поле в своём составе    
+</div>
+
+
+</body>
+<script type="text/javascript">
+    var input_all=document.querySelectorAll(".inp");
+    console.log("count=", input_all.length);
+    let i=1;
+    function width_change()
+    {   
+        //console.log("value.length=", input_all);
+        //input_all[i].isContentEditable=true;
+        for(let j=0, length = input_all.length; j < length; j++) 
+        if(input_all[i].value.length>20)
+        input_all[i].setAttribute('size', input_all[i].value.length+1);
+        else
+        input_all[i].setAttribute('size', 20);
+
+    }
+    console.log(input_all.length);
+    
+    function get_focus()
+        {
+            for (let k=0, length = input_all.length; k < length; k++) 
+             {
+                input_all[k].addEventListener("keydown", width_change);
+                input_all[k].onfocus=function(event)
+                {  
+                     console.log("focus");
+                    for(let j=0, length = input_all.length; j < length; j++) 
+                     {
+                         if(event.srcElement==input_all[j]) {i=j;}
+                     }  
+                     console.log("i=",i);        
+                }
+             }
+        }
+    </script>
+    <script>
+        let num=0;
+        function add_attribute()
+        {
+            const Element=document.getElementById("add_attr");
+            let Placed=document.querySelectorAll(".placed");
+            let elems=Placed[0].querySelectorAll(".inp");
+            let plus=Placed[0].querySelectorAll(".plus");
+            let minus=Placed[0].querySelectorAll(".minus");
+
+            for(let j=0, length = elems.length; j < length; j++) 
+                if(elems[j].value.length<20)
+                elems[j].setAttribute('size', 20);
+            Element.insertAdjacentHTML("afterbegin", Placed[0].outerHTML);
+            console.log("outer=", Placed[0].outerHTML);
+            input_all=document.querySelectorAll(".inp");
+            plus[0].style.display="none";
+            minus[0].style.display="inline";
+            minus[0].setAttribute("id", "minus"+num);
+            Placed[0].setAttribute("id", "Placed"+num); console.log("num=",num);
+            ++num;
+        }
+        function delete_attribute()
+        {
+            let minus=document.querySelectorAll(".minus");
+            for(let j=0; j < num; j++) 
+            {
+                if(event.target.id=="minus"+j)
+                {
+                    const Element=document.getElementById("add_attr");
+                    let Placed=document.getElementById("Placed"+j);
+                   // Placed.remove();  ///removeChild(Placed)
+                   Element.removeChild(Placed);
+                    console.log("Deleted=", j, minus.length);
+                }
+                else
+                console.log("NtDeleted=", j, event.target.id);
+            }  
+        }
+
+
+        function to_server()
+        {
+            let obj_name=document.getElementById("struct_name1");
+            let result=obj_name.value+"{";
+            let Placed=document.querySelectorAll(".placed");
+            console.log("result=", result);
+            for(let j=0, length = Placed.length; j < length; j++)
+            {
+                let inp=Placed[j].querySelector(".inp");
+                let property_type=Placed[j].querySelector(".property_type");
+                result=result+inp.value+":"+property_type.value+",";
+            }
+            result=result+"};";
+            console.log("result_full=",result);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/content.html"+"?"+"contentValue=777", true);
+            xhr.send(result);
+        }
+    </script>
+</html>

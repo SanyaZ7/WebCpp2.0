@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="WebCpp2.0" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_main_app">
+				<Option output="bin/Debug/WebCpp2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++17" />
+					<Add option="-g" />
+					<Add directory="fastcgi" />
+				</Compiler>
+				<Linker>
+					<Add option="-lpthread" />
+					<Add library="fastcgi/libfcgi.so" />
+				</Linker>
+			</Target>
+			<Target title="Release_main_app">
+				<Option output="bin/Release/WebCpp2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++17" />
+					<Add directory="fastcgi" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lpthread" />
+					<Add library="fastcgi/libfcgi.so" />
+				</Linker>
+			</Target>
+			<Target title="libfcgi">
+				<Option output="fastcgi/fcgi" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-std=c++17" />
+					<Add option="-fPIC" />
+				</Compiler>
+				<Linker>
+					<Add library="fastcgi/libfcgi.so" />
+				</Linker>
+			</Target>
+			<Target title="wd">
+				<Option output="WebCpp2" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c17" />
+				</Compiler>
+				<Linker>
+					<Add option="-lpthread" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++17" />
+		</Compiler>
+		<Unit filename="fastcgi/fastcgi.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgi_config.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgi_config_x86.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgi_stdio.c">
+			<Option compilerVar="CC" />
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgi_stdio.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgiapp.c">
+			<Option compilerVar="CC" />
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgiapp.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgimisc.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgio.c">
+			<Option compilerVar="CC" />
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgio.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/fcgios.h">
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="fastcgi/os_unix.c">
+			<Option compilerVar="CC" />
+			<Option target="libfcgi" />
+		</Unit>
+		<Unit filename="main_app/main.cpp">
+			<Option target="Debug_main_app" />
+			<Option target="Release_main_app" />
+		</Unit>
+		<Unit filename="main_app/web_functions.cpp">
+			<Option target="Debug_main_app" />
+			<Option target="Release_main_app" />
+		</Unit>
+		<Unit filename="watchdog/wd_main.cpp">
+			<Option target="wd" />
+		</Unit>
+		<Unit filename="web_server.h">
+			<Option target="Debug_main_app" />
+			<Option target="Release_main_app" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

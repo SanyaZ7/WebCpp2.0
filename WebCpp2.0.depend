@@ -1,0 +1,132 @@
+# depslib dependency file v1.0
+1661704598 source:/home/alex/workspace/WebCpp2.0/main_app/main.cpp
+	<cstring>
+	<string>
+	<../web_server.h>
+	<thread>
+
+1661798459 source:/home/alex/workspace/WebCpp2.0/main_app/web_functions.cpp
+	<string>
+	<filesystem>
+	<fstream>
+	<iostream>
+	<sstream>
+	<cstring>
+	"../web_server.h"
+	<mutex>
+	<iostream>
+	<chrono>
+	<thread>
+	"fastcgi.h"
+	"fcgiapp.h"
+	"fcgimisc.h"
+
+1658678803 /home/alex/workspace/WebCpp2.0/web_server.h
+	<vector>
+	<time.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1584393336 source:/home/alex/workspace/WebCpp2.0/fastcgi/fcgi_stdio.c
+	<errno.h>
+	<stdarg.h>
+	<stdlib.h>
+	<string.h>
+	"fcgi_config.h"
+	<unistd.h>
+	"fcgiapp.h"
+	"fcgios.h"
+	"fcgimisc.h"
+	"fcgi_stdio.h"
+	<crt_externs.h>
+	<stdio.h>
+
+1584393336 /home/alex/workspace/WebCpp2.0/fastcgi/fcgi_config.h
+
+1660946449 /home/alex/workspace/WebCpp2.0/fastcgi/fcgiapp.h
+	<stdarg.h>
+	<varargs.h>
+
+1584393336 /home/alex/workspace/WebCpp2.0/fastcgi/fcgios.h
+	<windows.h>
+	<winsock2.h>
+	"fcgi_config.h"
+	<sys/time.h>
+	<sys/types.h>
+
+1660943296 /home/alex/workspace/WebCpp2.0/fastcgi/fcgimisc.h
+
+1584393336 /home/alex/workspace/WebCpp2.0/fastcgi/fcgi_stdio.h
+	<stdio.h>
+	<sys/types.h>
+	"fcgiapp.h"
+
+1660948481 source:/home/alex/workspace/WebCpp2.0/fastcgi/fcgiapp.c
+	<assert.h>
+	<errno.h>
+	<fcntl.h>
+	<math.h>
+	<memory.h>
+	<stdarg.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<sys/types.h>
+	<limits.h>
+	"fcgi_config.h"
+	<sys/socket.h>
+	<sys/time.h>
+	<unistd.h>
+	<limits.h>
+	"fcgimisc.h"
+	"fastcgi.h"
+	"fcgios.h"
+	"fcgiapp.h"
+	<time.h>
+
+1660691366 /home/alex/workspace/WebCpp2.0/fastcgi/fastcgi.h
+
+1584393336 source:/home/alex/workspace/WebCpp2.0/fastcgi/fcgio.c
+	<stdio.h>
+	<limits.h>
+	"fcgio.h"
+
+1584393336 /home/alex/workspace/WebCpp2.0/fastcgi/fcgio.h
+	<iostream>
+	"fcgiapp.h"
+
+1660950183 source:/home/alex/workspace/WebCpp2.0/fastcgi/os_unix.c
+	"fcgi_config.h"
+	<sys/types.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<assert.h>
+	<errno.h>
+	<fcntl.h>
+	<math.h>
+	<memory.h>
+	<netinet/tcp.h>
+	<stdarg.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<sys/time.h>
+	<sys/un.h>
+	<signal.h>
+	<poll.h>
+	<netdb.h>
+	<sys/socket.h>
+	<unistd.h>
+	"fastcgi.h"
+	"fcgimisc.h"
+	"fcgios.h"
+
+1661805684 source:/home/alex/workspace/WebCpp2.0/watchdog/wd_main.cpp
+	<iostream>
+	<string>
+	<string.h>
+	<fcntl.h>
+	<unistd.h>
+	<sys/stat.h>
+	<thread>
+

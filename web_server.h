@@ -5,6 +5,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <thread>
 
 class filecount_struct{
     public:
@@ -14,7 +15,10 @@ class filecount_struct{
 
 class web_param {
     public:
+    std::vector<long> threads_time_elapsed;
     std::vector <filecount_struct*> *vc;
+    bool vc_in_update=false;
+    bool vc_is_used=false;
     char *html_path;
     char *folder_path;
     bool restart=false;

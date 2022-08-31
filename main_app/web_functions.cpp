@@ -177,47 +177,50 @@ int fcgi_write_from_buffer(FCGX_Request *request, char *buf, int len)
 
 int add_all_path_for_send(FCGX_Request *request, char *uri, web_param *param)
 {
-    if(param->vc!=nullptr)
-    for(filecount_struct *fc: *(param->vc))
-    {
-        ///страница по умолчанию
-        char *str_temp="/index.html"; ///временный указатель для index.html
-        if(!strcmp(uri, "/"))
+    if(param->vc!=nullptr&&param->vc_in_update==false)
+    {   param->vc_is_used=true;
+        for(filecount_struct *fc: *(param->vc))
         {
-            goto start;
-        }
-        str_temp=fc->file;
-        if(!strcmp(uri, str_temp))
-        {
-            start:
-            std::string filename{param->html_path};
-            filename+=str_temp;
-
-            std::ifstream istrm(filename, std::ios::binary);
-            if (istrm.is_open())
+            ///страница по умолчанию
+            char *str_temp="/index.html"; ///временный указатель для index.html
+            if(!strcmp(uri, "/"))
             {
-                fc->count++; ///счётчик количества запросов
-                std::stringstream extension;
-                extension<<std::filesystem::path(filename.c_str()).extension();
-                if(extension.str()!=".mstch")
-                {
-                    fcgi_write_from_file(request, istrm);
-                    /*istrm.seekg (0, istrm.end);
-                    std::streampos size = istrm.tellg();
-                    istrm.seekg (0, istrm.beg);
-                    char *memblock = new char [size];
-                    istrm.read (memblock, size);
-                    fcgi_write_from_buffer(request, memblock, size);
-                    delete[] memblock;*/
-                    goto end;
-                }
-                else
-                {
-
-                }
+                goto start;
             }
-            else std::cout << "Unable to open file";
+            str_temp=fc->file;
+            if(!strcmp(uri, str_temp))
+            {
+                start:
+                std::string filename{param->html_path};
+                filename+=str_temp;
+
+                std::ifstream istrm(filename, std::ios::binary);
+                if (istrm.is_open())
+                {
+                    fc->count++; ///счётчик количества запросов
+                    std::stringstream extension;
+                    extension<<std::filesystem::path(filename.c_str()).extension();
+                    if(extension.str()!=".mstch")
+                    {
+                        fcgi_write_from_file(request, istrm);
+                        /*istrm.seekg (0, istrm.end);
+                        std::streampos size = istrm.tellg();
+                        istrm.seekg (0, istrm.beg);
+                        char *memblock = new char [size];
+                        istrm.read (memblock, size);
+                        fcgi_write_from_buffer(request, memblock, size);
+                        delete[] memblock;*/
+                        goto end;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else std::cout << "Unable to open file";
+            }
         }
+        param->vc_is_used=false;
     }
     end:
     post_and_get_requests(request, uri, param);
@@ -246,7 +249,7 @@ std::vector <filecount_struct*>* add_files_to_vector(const char* html_path)
     return vc;
 }
 
-int thread_func(int socketId, web_param *param)
+int thread_func(int socketId, web_param *param, int thread_num)
 {
      int rc;
     FCGX_Request request;
@@ -258,13 +261,16 @@ int thread_func(int socketId, web_param *param)
     }
     while(!(param->restart))
     {
-        static std::mutex accept_mutex;
-        //попробовать получить новый запрос
-        printf("Try to accept new request\n");
-        accept_mutex.lock();
+        ///std::mutex accept_mutex;
+         ///accept_mutex.lock();
         rc = FCGX_Accept_r(&request);
+        ///accept_mutex.unlock();
+        high_resolution_clock::time_point t1 = high_resolution_clock::now();
+        //попробовать получить новый запрос
+        //printf("Try to accept new request\n");
+
         param->copy_count();
-        accept_mutex.unlock();
+        ///
         if(rc < 0)
         {
             //ошибка при получении запроса
@@ -277,14 +283,19 @@ int thread_func(int socketId, web_param *param)
             add_all_path_for_send(&request, uri, param);
         }
         FCGX_Finish_r(&request);
+        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+        long duration = static_cast<long>(duration_cast<microseconds>( t2 - t1 ).count());
+        param->threads_time_elapsed[thread_num]+=duration;
+        printf("thread_num=%d|%d\n", thread_num, param->threads_time_elapsed[thread_num]);
     }
+
     return 0;
 }
 
 int create_fastcgi_threads(char *ip_addr, web_param param)
 {
     FCGX_Init();
-    int THREAD_COUNT=4;//sysconf(_SC_NPROCESSORS_ONLN);
+    int THREAD_COUNT=std::thread::hardware_concurrency();
      //открываем новый сокет
     int socketId = FCGX_OpenSocket(ip_addr, 20); ///20 - глубина очереди
      if(socketId < 0)
@@ -295,7 +306,7 @@ int create_fastcgi_threads(char *ip_addr, web_param param)
     std::thread thr[THREAD_COUNT];
     for(int i=0; i<THREAD_COUNT; ++i)
     {
-        thr[i]=std::thread(thread_func, socketId, &param);
+        thr[i]=std::thread(thread_func, socketId, &param, i);
     }
     for(int i=0; i<THREAD_COUNT; ++i)
     {
@@ -312,6 +323,7 @@ web_param::web_param(char *folder_path, char *html_path)
     struct stat attr;
     stat(this->html_path, &attr);
     this->html_folder_last_modified=attr.st_mtime;
+    threads_time_elapsed.resize(std::thread::hardware_concurrency());
 }
 
 web_param::~web_param()
@@ -348,8 +360,13 @@ void web_param::copy_count(void)
             free(fc->file);
             delete fc;
         }
-        delete this->vc;
+        std::vector <filecount_struct*> *temp=this->vc;
+        while(!this->vc_is_used)
+        this->vc_in_update=true;
+        this->vc=nullptr;
+        delete temp;
         this->vc=vc2;
+        vc_in_update=false;
         this->html_folder_last_modified=time;
     }
 }

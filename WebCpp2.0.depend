@@ -1,11 +1,14 @@
 # depslib dependency file v1.0
-1661704598 source:/home/alex/workspace/WebCpp2.0/main_app/main.cpp
+1661895898 source:/home/alex/workspace/WebCpp2.0/main_app/main.cpp
 	<cstring>
 	<string>
 	<../web_server.h>
 	<thread>
+	<fcntl.h>
+	<sys/stat.h>
+	<unistd.h>
 
-1661798459 source:/home/alex/workspace/WebCpp2.0/main_app/web_functions.cpp
+1661979356 source:/home/alex/workspace/WebCpp2.0/main_app/web_functions.cpp
 	<string>
 	<filesystem>
 	<fstream>
@@ -21,11 +24,12 @@
 	"fcgiapp.h"
 	"fcgimisc.h"
 
-1658678803 /home/alex/workspace/WebCpp2.0/web_server.h
+1661973980 /home/alex/workspace/WebCpp2.0/web_server.h
 	<vector>
 	<time.h>
 	<sys/stat.h>
 	<sys/types.h>
+	<thread>
 
 1584393336 source:/home/alex/workspace/WebCpp2.0/fastcgi/fcgi_stdio.c
 	<errno.h>

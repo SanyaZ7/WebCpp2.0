@@ -334,10 +334,7 @@ int FCGX_PutStr(const char *str, int n, FCGX_Stream *stream)
 	}
         if(stream->isClosed || stream->isReader)
             return -1;
-        clock_t time=clock();
         stream->emptyBuffProc(stream, FALSE);
-        time = clock() - time;
-       printf("time=%d\n", time);
     }
 }
 

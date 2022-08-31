@@ -62,8 +62,6 @@ int input(char *argv0, char *folder_path, char* terminal_name)
 
 int main(int argc, char *argv[])
 {
-    int kkk=55;
-
     char *folder_path=get_workspace_folder_path(argv[0]);
     std::string html_path{folder_path};
     html_path.append("html/");
